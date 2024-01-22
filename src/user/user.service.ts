@@ -8,7 +8,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async user(params: { id: number }): Promise<User | null> {
+  async findOne(params: { id: number }): Promise<User | null> {
     try {
       const { id } = params;
       const user = await this.prisma.user.findUnique({
@@ -22,15 +22,14 @@ export class UsersService {
       return user;
     } catch (error) {
       console.error(error.message);
-      throw new Error('Internal Server Error');
     }
   }
 
-  async users(): Promise<User[]> {
+  async findAll(): Promise<User[]> {
     return this.prisma.user.findMany();
   }
 
-  async createUser(params: UserDto): Promise<User> {
+  async create(params: UserDto): Promise<User> {
     const { firstName, lastName } = params;
 
     return this.prisma.user.create({
@@ -41,7 +40,7 @@ export class UsersService {
     });
   }
 
-  async updateUser(params: {
+  async update(params: {
     id: number;
     updateUserDto: UpdateUserDto;
   }): Promise<User> {
@@ -59,7 +58,7 @@ export class UsersService {
     });
   }
 
-  async deleteUser(id: number): Promise<User> {
+  async delete(id: number): Promise<User> {
     return this.prisma.user.delete({
       where: { id },
     });
