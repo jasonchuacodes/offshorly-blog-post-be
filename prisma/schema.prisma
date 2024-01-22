@@ -12,7 +12,7 @@ datasource db {
 
 model User {
   id        Int       @id @default(autoincrement())
-  firstname String
+  firstName String
   lastName  String
   posts     Post[]
   comments  Comment[]
