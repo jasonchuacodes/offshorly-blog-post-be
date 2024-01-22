@@ -16,6 +16,9 @@ export class PostsService {
     try {
       const { id } = params;
       const post = await this.prisma.post.findUnique({
+        include: {
+          comments: true,
+        },
         where: { id },
       });
 
@@ -31,7 +34,11 @@ export class PostsService {
   }
 
   async findAll(): Promise<Post[]> {
-    return this.prisma.post.findMany();
+    return this.prisma.post.findMany({
+      include: {
+        comments: true,
+      },
+    });
   }
 
   async create(params: PostDto): Promise<Post> {
