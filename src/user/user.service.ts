@@ -12,6 +12,17 @@ export class UsersService {
     try {
       const { id } = params;
       const user = await this.prisma.user.findUnique({
+        include: {
+          posts: {
+            include: {
+              comments: {
+                include: {
+                  author: true,
+                },
+              },
+            },
+          },
+        },
         where: { id },
       });
 
@@ -21,7 +32,7 @@ export class UsersService {
 
       return user;
     } catch (error) {
-      console.error(error.message);
+      throw new Error('User not found');
     }
   }
 
@@ -31,6 +42,10 @@ export class UsersService {
 
   async create(params: UserDto): Promise<User> {
     const { firstName, lastName } = params;
+
+    if (firstName == '' || lastName == '') {
+      throw new Error('use data cannot be empty');
+    }
 
     return this.prisma.user.create({
       data: {
