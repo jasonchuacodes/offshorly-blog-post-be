@@ -17,7 +17,18 @@ export class PostsService {
       const { id } = params;
       const post = await this.prisma.post.findUnique({
         include: {
-          comments: true,
+          author: true,
+          comments: {
+            include: {
+              author: {
+                select: {
+                  id: true,
+                  firstName: true,
+                  lastName: true,
+                },
+              },
+            },
+          },
         },
         where: { id },
       });
@@ -36,7 +47,18 @@ export class PostsService {
   async findAll(): Promise<Post[]> {
     return this.prisma.post.findMany({
       include: {
-        comments: true,
+        author: true,
+        comments: {
+          include: {
+            author: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+              },
+            },
+          },
+        },
       },
     });
   }
